@@ -1,0 +1,31 @@
+{
+  "name": "sskv-parser",
+  "version": "1.0.0",
+  "description": "semicolon separated key-value strings parser",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rcmonitor/sskv_parser.git"
+  },
+  "keywords": [
+    "semicolon",
+    "key-value",
+    "parser"
+  ],
+  "author": "rcmonitor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rcmonitor/sskv_parser/issues"
+  },
+  "homepage": "https://github.com/rcmonitor/sskv_parser",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
+  }
+}
