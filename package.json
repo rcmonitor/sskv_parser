@@ -1,6 +1,6 @@
 {
   "name": "sskv-parser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "semicolon separated key-value strings parser",
   "main": "index.js",
   "directories": {
