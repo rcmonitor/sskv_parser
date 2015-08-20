@@ -4,6 +4,7 @@
  */
 
 var fs = require('fs');
+var Stream = require('stream');
 
 require('chai').should();
 
@@ -11,8 +12,25 @@ var Parser = require('../index');
 
 describe('parser test', function(){
 
+
+	var testParser = function(oParser, arExpected, fCallback){
+		var intOffset = 0;
+
+		oParser.on('readable', function(){
+			var data = oParser.read();
+
+			data.should.eql(arExpected[intOffset]);
+
+			intOffset ++;
+		});
+
+		oParser.on('end', function(){
+			fCallback();
+		})
+	};
+
 	describe('#readable event', function(){
-		it('should return correct data', function(fCallback){
+		it('should return correct data from file', function(fCallback){
 
 			var arExpected = [
 				'0', {
@@ -26,21 +44,55 @@ describe('parser test', function(){
 
 			sKeyValue.pipe(oParser);
 
-			var intOffset = 0;
+			testParser(oParser, arExpected, fCallback);
 
-			oParser.on('readable', function(){
-				var data = oParser.read();
+		});
 
-				data.should.eql(arExpected[intOffset]);
+		it('should return correct data from string', function(fCallback){
+			var strData = 'some=value;any;moar=big_value';
+			var arExpected = [
+				{"some": "value"},
+				"any",
+				{"moar": "big_value"}
+			];
 
-				intOffset ++;
+			var sString = new Stream.Readable();
 
-			});
+			sString._read = function noop(){};
 
-			oParser.on('end', function(){
-				fCallback();
-			});
+			var oParser = new Parser();
 
-		})
+			sString.pipe(oParser);
+
+			sString.push(strData);
+			sString.push(null);
+
+			testParser(oParser, arExpected, fCallback);
+
+		});
+
+		it('should return correct data with comma delimiter', function(fCallback){
+
+			var strData = '1567,dummy key=dummy value,some1469moar,any_key=42';
+			var arExpected = [
+				"1567",{
+					"dummy key": "dummy value"
+				}, "some1469moar", {
+					"any_key": "42"
+				}
+			];
+
+			var oParser = new Parser(',');
+
+			var sString = new Stream.Readable();
+			sString._read = function noop(){};
+
+			sString.pipe(oParser);
+
+			sString.push(strData);
+			sString.push(null);
+
+			testParser(oParser, arExpected, fCallback);
+		});
 	})
 });
