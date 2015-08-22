@@ -22,7 +22,7 @@ var sStream = fs.createReadStream('path/to/sskv/file.txt');
 sStream.pipe(oParser);
 
 oParser.on('readable', function(){
-	oData = oParser.read();
+	oData = this.read();
 	
 	console.log(oData);
 });
